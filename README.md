@@ -12,7 +12,7 @@ Este repositorio contiene la configuración de OpenCore y la carpeta `EFI` neces
 
 ## ✅ Estado Actual
 
-La EFI ya logró arrancar el instalador de **macOS Mavericks 10.9.5** en la Positivo BGH A470 e iniciar la instalación.
+La EFI ya logró arrancar el instalador de **macOS Mavericks 10.9.5** en la Positivo BGH A470 y completar la instalación.
 
 La combinación que destrabó el error de producto incompatible fue:
 
@@ -24,6 +24,8 @@ La combinación que destrabó el error de producto incompatible fue:
 *   `Kernel -> Emulate -> DummyPowerManagement = True`
 
 No cambiar estos valores mientras se resuelven los siguientes problemas post-instalación.
+
+La etapa siguiente esta documentada en [`POST-INSTALACION.md`](POST-INSTALACION.md): teclado/trackpad PS/2, red, audio, gráficos, batería y arranque desde disco interno. Para red se agrego `RealtekRTL8100.kext` 2.0.1 como candidato para Ethernet Realtek 10/100 RTL810x.
 
 ## ⚠️ Problemas Conocidos y Soluciones Aplicadas
 
