@@ -150,11 +150,29 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>VirtualSMC.kext</string>
+				<string>FakeSMC.kext</string>
 				<key>Comment</key>
-				<string>V1.3.8</string>
+				<string>RehabMan v1800 - Reemplaza VirtualSMC para Mavericks (DSMOS fix)</string>
 				<key>Enabled</key>
 				<true/>
+				<key>ExecutablePath</key>
+				<string>Contents/MacOS/FakeSMC</string>
+				<key>MaxKernel</key>
+				<string></string>
+				<key>MinKernel</key>
+				<string></string>
+				<key>PlistPath</key>
+				<string>Contents/Info.plist</string>
+			</dict>
+			<dict>
+				<key>Arch</key>
+				<string>Any</string>
+				<key>BundlePath</key>
+				<string>VirtualSMC.kext</string>
+				<key>Comment</key>
+				<string>V1.3.8 - DESACTIVADO: Invalid Parameter en Mavericks, reemplazado por FakeSMC</string>
+				<key>Enabled</key>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/VirtualSMC</string>
 				<key>MaxKernel</key>
@@ -206,9 +224,9 @@
 				<key>BundlePath</key>
 				<string>RealtekRTL8111.kext</string>
 				<key>Comment</key>
-				<string>V2.2.2 - Chip confirmado: Realtek RTL8168 (10ec:8168) - ACTIVO</string>
+				<string>V2.2.2 - TEMPORALMENTE DESACTIVADO: Invalid Parameter en prelinked injection Mavericks</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/RealtekRTL8111</string>
 				<key>MaxKernel</key>
@@ -314,9 +332,9 @@
 				<key>BundlePath</key>
 				<string>SMCBatteryManager.kext</string>
 				<key>Comment</key>
-				<string>V1.3.8</string>
+				<string>V1.3.8 - DESACTIVADO: plugin VirtualSMC, incompatible con FakeSMC</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/SMCBatteryManager</string>
 				<key>MaxKernel</key>
@@ -332,9 +350,9 @@
 				<key>BundlePath</key>
 				<string>SMCLightSensor.kext</string>
 				<key>Comment</key>
-				<string>V1.3.8</string>
+				<string>V1.3.8 - DESACTIVADO: plugin VirtualSMC, incompatible con FakeSMC</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/SMCLightSensor</string>
 				<key>MaxKernel</key>
@@ -350,9 +368,9 @@
 				<key>BundlePath</key>
 				<string>SMCProcessor.kext</string>
 				<key>Comment</key>
-				<string>V1.3.8</string>
+				<string>V1.3.8 - DESACTIVADO: plugin VirtualSMC, incompatible con FakeSMC</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/SMCProcessor</string>
 				<key>MaxKernel</key>
@@ -751,7 +769,7 @@
 				AAAAAAAAAAAAAAAAAAA=
 				</data>
 				<key>boot-args</key>
-				<string>-v alcid=3 watchdog=0</string>
+				<string>-v -f alcid=3 watchdog=0</string>
 				<key>csr-active-config</key>
 				<data>
 				AwgAAA==
