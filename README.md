@@ -261,9 +261,16 @@ real.
 
 Mavericks usa OpenSSH 6.2, que es tan viejo que las Mac modernas rechazan sus
 algoritmos por defecto. Para copiar archivos desde la Mac de trabajo a
-Mavericks hay que forzar compatibilidad con estas flags:
+Mavericks hay que forzar compatibilidad con estas flags.
 
-**Enviar una carpeta:**
+Poner lo que se quiera enviar en `~/Desktop/folder` y copiar este comando tal
+cual (es una sola linea):
+
+```
+scp -O -r -o KexAlgorithms=diffie-hellman-group14-sha1 -o HostKeyAlgorithms=ssh-rsa -o PubkeyAcceptedAlgorithms=+ssh-rsa -o Ciphers=aes128-ctr -o MACs=hmac-sha1 ~/Desktop/folder jd@192.168.8.39:~/Desktop/
+```
+
+**Enviar una carpeta** (version expandida para leer mejor):
 
 ```bash
 scp -O -r \
