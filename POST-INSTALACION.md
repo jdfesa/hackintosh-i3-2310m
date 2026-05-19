@@ -2,9 +2,24 @@
 
 Este documento registra los pasos posteriores a la primera instalacion exitosa de macOS Mavericks 10.9.5 en la Positivo BGH A470 con Intel Core i3-2310M.
 
+Documentos relacionados:
+
+* [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md): errores historicos, fixes aplicados y diagnostico del cuelgue actual.
+* [`DETECCION-HARDWARE.md`](DETECCION-HARDWARE.md): como generar y actualizar `hardware-info.txt`.
+
 ## Estado inicial
 
 La instalacion ya finalizo y la EFI actual permite arrancar el instalador/sistema con OpenCore en modo Legacy.
+
+Actualizacion 2026-05-19:
+
+* El pendrive tenia `config.plist` sincronizado con el repo, pero no todos los
+  kexts presentes. Esto dejaba entradas activas apuntando a bundles ausentes.
+* Se resincronizo `EFI/` al pendrive preservando el archivo legacy `/boot`.
+* Para la siguiente prueba de arranque, la EFI queda en modo minimo:
+  `FakeSMC.kext` + `VoodooPS2Controller.kext`.
+* `Lilu.kext`, `AppleALC.kext`, `ECEnabler.kext`, `WhateverGreen.kext` y red
+  quedan desactivados hasta confirmar que el sistema deja de congelarse.
 
 Valores criticos que no conviene tocar por ahora:
 
@@ -51,10 +66,10 @@ Estado de la EFI actualizado:
 * `IntelMausi.kext` fue desactivado porque probablemente no corresponde al hardware de esta notebook.
 * `RealtekRTL8100.kext` 2.0.1 fue desactivado: apunta a `10ec:8136` pero el chip real es `10ec:8168`.
 * `RealtekRTL8111.kext` 2.4.2 está desactivado porque declara mínimo 10.14.
-* **SOLUCIÓN APLICADA**: El chip Ethernet fue identificado desde el IORegistry como `vendor-id=0x10EC, device-id=0x8168` → **Realtek RTL8168/RTL8111**.
+* **SOLUCIÓN APLICADA**: El chip Ethernet fue identificado desde el IORegistry como `vendor-id=0x10EC, device-id=0x8168` -> **Realtek RTL8168/RTL8111**.
 * Se reemplazó el `.kext` en `EFI/OC/Kexts/` por **`RealtekRTL8111` v2.2.2** (sin `LSMinimumSystemVersion`, compatible con macOS 10.6+).
 * El `IOPCIMatch` de la v2.2.2 es `0x816810ec` — coincide exactamente con el hardware.
-* Estado actual: kext activado en `config.plist`, pendiente verificar funcionamiento tras arranque.
+* Estado actual: kext presente pero desactivado en `config.plist` hasta confirmar un arranque estable.
 
 La Positivo BGH A470 tiene Ethernet 10/100. En equipos de esta epoca es comun encontrar Realtek PCIe Fast Ethernet de la familia RTL810x/RTL8105E. Si ese es el chip real, el kext correcto no es `RealtekRTL8111.kext`, sino `RealtekRTL8100.kext`.
 
@@ -114,7 +129,7 @@ Recordatorio de layout Legacy:
 
 ## Prioridad 4 - Audio
 
-Estado actual: `AppleALC.kext` esta activo y se usa `alcid=3` en `boot-args`.
+Estado actual: `AppleALC.kext` esta presente pero desactivado para la prueba de arranque minimo. `alcid=3` se puede restaurar cuando se reactive audio.
 
 Accion recomendada:
 
@@ -140,7 +155,7 @@ Accion recomendada:
 
 Estado actual:
 
-* `SMCBatteryManager.kext` esta activo.
+* `SMCBatteryManager.kext` esta desactivado porque depende de `VirtualSMC.kext`, y la EFI de recuperacion usa `FakeSMC.kext`.
 * `BrightnessKeys.kext` esta desactivado porque pide minimo 10.11.
 * `DummyPowerManagement = True` esta activo para estabilizar la instalacion.
 
@@ -166,7 +181,7 @@ No reactivar estos kexts en Mavericks salvo que se reemplacen por versiones anti
 
 | Kext | Version | Motivo | Estado |
 | --- | --- | --- | --- |
-| `RealtekRTL8111.kext` | 2.2.2 | Ethernet Realtek RTL8168/RTL8111, chip confirmado `10ec:8168` | **Activado** — pendiente verificación en boot |
+| `RealtekRTL8111.kext` | 2.2.2 | Ethernet Realtek RTL8168/RTL8111, chip confirmado `10ec:8168` | Desactivado hasta confirmar arranque estable |
 | `RealtekRTL8100.kext` | 2.0.1 | Descartado — chip real no es RTL810x sino RTL8168 | Desactivado |
 
 ## Checklist inmediato

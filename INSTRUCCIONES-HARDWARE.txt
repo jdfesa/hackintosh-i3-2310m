@@ -1,0 +1,28 @@
+La guia de deteccion de hardware ahora vive en:
+
+  DETECCION-HARDWARE.md
+
+Resumen rapido:
+
+1. Arrancar Mavericks.
+2. Abrir Terminal.
+3. Verificar que exista:
+
+   ls /Volumes/EFI/detectar-hardware.sh
+
+4. Si no existe, montar la EFI en la Mac de trabajo y copiar
+   detectar-hardware.sh a la raiz del pendrive.
+
+5. Ejecutar:
+
+   bash /Volumes/EFI/detectar-hardware.sh
+
+6. El script genera:
+
+   ~/Desktop/hardware-info.txt
+
+7. Copiarlo al pendrive:
+
+   cp ~/Desktop/hardware-info.txt /Volumes/EFI/
+
+8. Traerlo de vuelta al repo y reemplazar hardware-info.txt.
