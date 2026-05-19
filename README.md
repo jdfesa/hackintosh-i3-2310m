@@ -10,6 +10,8 @@ EFI para instalar y arrancar **macOS Mavericks 10.9.5** en una notebook
 * Modelo: Positivo BGH A470
 * CPU: Intel Core i3-2310M, Sandy Bridge
 * GPU: Intel HD Graphics 3000
+* RAM: 8GB DDR3 1333MHz
+* Almacenamiento: HDD 160GB (2.5")
 * BIOS: Legacy, sin soporte UEFI nativo
 * Sistema objetivo: macOS Mavericks 10.9.5
 
