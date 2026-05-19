@@ -49,33 +49,48 @@ Estado de la EFI actualizado:
 * `AtherosE2200Ethernet.kext` esta desactivado y pide minimo 10.13.
 * `RealtekRTL8111.kext` esta desactivado y pide minimo 10.14.
 * `IntelMausi.kext` fue desactivado porque probablemente no corresponde al hardware de esta notebook.
-* `RealtekRTL8100.kext` 2.0.1 fue agregado y activado como candidato para Ethernet 10/100 Realtek RTL810x.
+* `RealtekRTL8100.kext` 2.0.1 fue desactivado: apunta a `10ec:8136` pero el chip real es `10ec:8168`.
+* `RealtekRTL8111.kext` 2.4.2 está desactivado porque declara mínimo 10.14.
+* **SOLUCIÓN APLICADA**: El chip Ethernet fue identificado desde el IORegistry como `vendor-id=0x10EC, device-id=0x8168` → **Realtek RTL8168/RTL8111**.
+* Se reemplazó el `.kext` en `EFI/OC/Kexts/` por **`RealtekRTL8111` v2.2.2** (sin `LSMinimumSystemVersion`, compatible con macOS 10.6+).
+* El `IOPCIMatch` de la v2.2.2 es `0x816810ec` — coincide exactamente con el hardware.
+* Estado actual: kext activado en `config.plist`, pendiente verificar funcionamiento tras arranque.
 
 La Positivo BGH A470 tiene Ethernet 10/100. En equipos de esta epoca es comun encontrar Realtek PCIe Fast Ethernet de la familia RTL810x/RTL8105E. Si ese es el chip real, el kext correcto no es `RealtekRTL8111.kext`, sino `RealtekRTL8100.kext`.
 
-El `RealtekRTL8100.kext` agregado declara `IOPCIMatch = 0x813610ec`, por lo que apunta al dispositivo Realtek `10ec:8136`, comun en controladoras PCIe Fast Ethernet RTL810x/RTL8105E.
+El `RealtekRTL8100.kext` agregado declara `IOPCIMatch = 0x813610ec`, por lo que apunta al dispositivo Realtek `10ec:8136`, comun en controladoras PCIe Fast Ethernet RTL810x/RTL8105E. Como no funciono, hay dos posibilidades principales:
+
+* La A470 no usa `10ec:8136` exactamente.
+* El kext carga pero no adjunta al dispositivo por ACPI/PCI, conflicto de driver o inicializacion del chip.
 
 Accion recomendada:
 
-1. Reiniciar con esta EFI y revisar si aparece Ethernet en Preferencias del Sistema > Red.
-2. Si no aparece automaticamente, crear manualmente una interfaz Ethernet en Preferencias del Sistema > Red.
-3. Verificar en Mavericks:
+1. No seguir cambiando kexts de red a ciegas.
+2. Verificar si el kext cargo:
    ```bash
    kextstat | grep -i realtek
    grep -i RealtekRTL8100 /var/log/system.log
    ifconfig
    ```
-4. Si el kext no carga o no aparece dispositivo, identificar el chip real desde Linux live:
+3. Identificar el chip real desde Linux live:
    ```bash
    lspci -nn | grep -i ethernet
    lspci -nn | grep -i network
    ```
-5. Desde macOS, si aparece en IORegistry:
+4. Desde macOS, si aparece en IORegistry:
    ```bash
    ioreg -p IODeviceTree -l | grep -i ethernet
    ioreg -l | grep -i "vendor-id\|device-id\|IOName"
    ```
-6. Si el ID no es `10ec:8136`, no insistir con este kext hasta saber el modelo exacto.
+5. Si el ID no es `10ec:8136`, no insistir con este kext hasta saber el modelo exacto.
+5. Si el ID no es `10ec:8136`, no insistir con este kext hasta saber el modelo exacto.
+6. **RESUELTO**: ID confirmado como `10ec:8168`. Se instaló `RealtekRTL8111` v2.2.2.
+7. Al arrancar con el pendrive actualizado, verificar con:
+   ```bash
+   kextstat | grep -i realtek
+   ifconfig en0
+   ```
+8. Si aparece `en0` y hay IP asignada, el Ethernet está funcionando.
 
 ## Prioridad 3 - Arranque desde disco interno
 
@@ -151,7 +166,8 @@ No reactivar estos kexts en Mavericks salvo que se reemplacen por versiones anti
 
 | Kext | Version | Motivo | Estado |
 | --- | --- | --- | --- |
-| `RealtekRTL8100.kext` | 2.0.1 | Ethernet Realtek 10/100 RTL810x, especialmente `10ec:8136` | Activado |
+| `RealtekRTL8111.kext` | 2.2.2 | Ethernet Realtek RTL8168/RTL8111, chip confirmado `10ec:8168` | **Activado** — pendiente verificación en boot |
+| `RealtekRTL8100.kext` | 2.0.1 | Descartado — chip real no es RTL810x sino RTL8168 | Desactivado |
 
 ## Checklist inmediato
 
