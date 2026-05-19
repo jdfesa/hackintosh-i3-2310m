@@ -11,25 +11,28 @@ EFI para instalar y arrancar **macOS Mavericks 10.9.5** en una notebook
 * BIOS: Legacy, sin soporte UEFI nativo
 * Sistema objetivo: macOS Mavericks 10.9.5
 
-El hardware detallado se recopila con [`detectar-hardware.sh`](detectar-hardware.sh)
+El hardware detallado se recopila con [`scripts/detectar-hardware.sh`](scripts/detectar-hardware.sh)
 y queda guardado en [`hardware-info.txt`](hardware-info.txt). El procedimiento
 esta documentado en [`DETECCION-HARDWARE.md`](DETECCION-HARDWARE.md).
 
 ## Estado actual
 
-La EFI ya logro arrancar el instalador de Mavericks y completar la instalacion.
-Actualmente se esta trabajando en una fase de recuperacion para resolver un
-cuelgue al seleccionar el sistema desde el picker.
+La EFI ya logro arrancar el instalador de Mavericks, completar la instalacion,
+entrar al sistema instalado y arrancar desde el disco interno sin depender del
+pendrive. Teclado, trackpad y red por adaptador USB Ethernet funcionan.
 
 Configuracion actual de arranque minimo:
 
 * `FakeSMC.kext` activado.
 * `VoodooPS2Controller.kext` y plugins PS/2 activados.
+* `RealtekRTL8111.kext` v2.2.2 presente, pero desactivado en OpenCore:
+  la inyeccion prelinked falla con `Invalid Parameter` en Mavericks. El puerto
+  Ethernet interno sigue pendiente.
 * `Lilu.kext`, `AppleALC.kext`, `ECEnabler.kext`, `WhateverGreen.kext`,
-  Ethernet, bateria y brillo desactivados temporalmente.
+  bateria y brillo desactivados temporalmente.
 
-El objetivo de esta fase es confirmar primero un arranque estable. Despues se
-reactivan red, audio, graficos, bateria y brillo de a un componente por vez.
+El objetivo de la siguiente fase es continuar con componentes pendientes:
+Ethernet interno, audio, graficos, bateria y brillo, de a un componente por vez.
 
 ## Documentacion
 
@@ -38,8 +41,14 @@ reactivan red, audio, graficos, bateria y brillo de a un componente por vez.
 * [`POST-INSTALACION.md`](POST-INSTALACION.md): tareas posteriores a la
   instalacion, prioridades y checklist de componentes.
 * [`DETECCION-HARDWARE.md`](DETECCION-HARDWARE.md): como ejecutar
-  `detectar-hardware.sh`, que datos recopila y como traer `hardware-info.txt`
-  de vuelta al repo.
+  `scripts/detectar-hardware.sh`, que datos recopila y como traer
+  `hardware-info.txt` de vuelta al repo.
+* [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md): como habilitar SSH en Mavericks,
+  resolver compatibilidad con OpenSSH moderno y usar tunel reverso.
+* [`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md): como instalar
+  OpenDuet/EFI en el disco interno o repetirlo al cambiar HDD por SSD.
+* [`scripts/`](scripts): scripts practicos para Mavericks. No requieren montar
+  la EFI porque incluyen el kext de red necesario.
 
 ## Valores criticos
 
@@ -56,22 +65,113 @@ Esta combinacion evita que el instalador detecte la identidad real del equipo
 como `POSITIVO BGH` y permite que Mavericks acepte la plataforma como
 `MacBookPro8,1`.
 
+## Privacidad
+
+Para publicar el repo, los identificadores SMBIOS fueron reemplazados por
+placeholders:
+
+* `SystemSerialNumber = C02XXXXXXXXX`
+* `MLB = C0200000000000000`
+* `SystemUUID = 00000000-0000-0000-0000-000000000000`
+* `ROM = 000000000000`
+
+Antes de usar la EFI en una instalacion real, generar valores propios y no
+publicarlos. La identidad critica para arrancar Mavericks es
+`SystemProductName = MacBookPro8,1`; los seriales no deben reutilizarse desde
+un repositorio publico.
+
+En la practica, para un equipo viejo que no se conecta a iCloud ni a internet
+con frecuencia, no hay riesgo real en usar valores fijos. A continuacion se
+muestran valores de referencia compatibles con `MacBookPro8,1` que pueden
+usarse directamente en una reinstalacion sin necesidad de regenerarlos:
+
+```text
+SystemProductName  = MacBookPro8,1
+SystemSerialNumber = C02G7QZXDH2G
+MLB                = C02024301GUH00078
+SystemUUID         = 8B3C78D2-0E45-4F15-9B25-A3D5A8F6B913
+ROM                = 68 17 29 AB 42 F1
+```
+
+Estos valores son un ejemplo funcional para esta maquina. Si en algun momento
+se necesita conectar a servicios de Apple, conviene regenerarlos con
+`GenSMBIOS` y verificar que el serial no este en uso.
+
 ## Estructura del repo
 
 ```text
-EFI/
-  BOOT/
-  OC/
-    ACPI/
-    Drivers/
-    Kexts/
-    Resources/
-    config.plist
-detectar-hardware.sh
-hardware-info.txt
-DETECCION-HARDWARE.md
-POST-INSTALACION.md
-TROUBLESHOOTING.md
+.
+├── boot                          ← OBLIGATORIO en Legacy. Sin este archivo
+│                                    el BIOS no encuentra OpenCore.
+│                                    Lo instala OpenDuet (BootInstall_X64.tool).
+│                                    No esta en el repo; se genera al instalar.
+│
+├── EFI/
+│   ├── BOOT/
+│   │   └── BOOTx64.efi           ← Primer stage UEFI. En Legacy lo carga /boot.
+│   │
+│   └── OC/
+│       ├── OpenCore.efi          ← Bootloader principal.
+│       ├── config.plist          ← Configuracion central de OpenCore.
+│       │
+│       ├── ACPI/
+│       │   └── MaLd0n.aml        ← SSDT todo-en-uno (Olarila).
+│       │
+│       ├── Drivers/
+│       │   ├── HfsPlusLegacy.efi ← Lectura HFS+. Variante Legacy para
+│       │   │                        Sandy Bridge (sin RDRAND).
+│       │   ├── HfsPlus.efi       ← Version UEFI normal (de respaldo).
+│       │   ├── OpenHfsPlus.efi   ← Alternativa open-source (de respaldo).
+│       │   ├── OpenRuntime.efi   ← Runtime esencial de OpenCore.
+│       │   ├── OpenCanopy.efi    ← Picker grafico (opcional).
+│       │   ├── OpenUsbKbDxe.efi  ← Soporte teclado USB en pre-boot.
+│       │   └── ResetNvramEntry.efi ← Opcion "Reset NVRAM" en el picker.
+│       │
+│       ├── Kexts/                ← Drivers de macOS inyectados por OpenCore.
+│       │   ├── FakeSMC.kext          [ACTIVO]  Emulador SMC clasico (DSMOS).
+│       │   ├── VoodooPS2Controller.kext [ACTIVO] Teclado + trackpad Synaptics.
+│       │   │   └── PlugIns/
+│       │   │       ├── VoodooPS2Keyboard.kext  [ACTIVO]
+│       │   │       ├── VoodooPS2Mouse.kext     [ACTIVO]
+│       │   │       └── VoodooPS2Trackpad.kext  [ACTIVO]
+│       │   ├── Lilu.kext                 [desact] Framework de patches.
+│       │   ├── AppleALC.kext             [desact] Audio HD.
+│       │   ├── WhateverGreen.kext        [desact] GPU Intel HD 3000.
+│       │   ├── ECEnabler.kext            [desact] EC/bateria.
+│       │   ├── RealtekRTL8111.kext       [desact] Ethernet 10ec:8168 (v2.2.2).
+│       │   ├── RealtekRTL8100.kext       [desact] Descartado (chip incorrecto).
+│       │   ├── AtherosE2200Ethernet.kext [desact] No corresponde al hardware.
+│       │   ├── IntelMausi.kext           [desact] No corresponde al hardware.
+│       │   ├── VirtualSMC.kext           [desact] Reemplazado por FakeSMC.
+│       │   ├── SMCBatteryManager.kext    [desact] Plugin VirtualSMC.
+│       │   ├── SMCLightSensor.kext       [desact] Plugin VirtualSMC.
+│       │   ├── SMCProcessor.kext         [desact] Plugin VirtualSMC.
+│       │   ├── BrightnessKeys.kext       [desact] Requiere min 10.11.
+│       │   ├── CryptexFixup.kext         [desact] Solo macOS 13+.
+│       │   └── USBInjectAll.kext         [desact] Requiere min 10.11.
+│       │
+│       └── Resources/            ← Iconos/temas del picker (opcional).
+│
+├── hardware-info.txt             ← Reporte de hardware generado desde Mavericks.
+├── kexts-mavericks/              ← Zips de kexts descargados (backup).
+│
+├── scripts/
+│   ├── ssh.sh                    ← Habilita SSH en Mavericks.
+│   ├── red.sh                    ← Instala kext Ethernet en S/L/E.
+│   ├── ver.sh                    ← Verifica interfaces de red.
+│   ├── diag.sh                   ← Diagnostico de red.
+│   ├── efi-interno.sh            ← Instala EFI en disco interno/SSD.
+│   ├── detectar-hardware.sh      ← Genera hardware-info.txt.
+│   ├── EFI/                      ← Copia de la EFI para efi-interno.sh.
+│   ├── LegacyBoot/               ← Archivos OpenDuet para boot Legacy.
+│   └── kexts/                    ← Kexts para instalar en S/L/E.
+│
+├── POST-INSTALACION.md
+├── TROUBLESHOOTING.md
+├── DETECCION-HARDWARE.md
+├── SSH-MAVERICKS.md
+├── ARRANQUE-DISCO-INTERNO.md
+└── README.md                     ← Este archivo.
 ```
 
 ## Arranque Legacy
@@ -79,14 +179,20 @@ TROUBLESHOOTING.md
 La notebook no arranca OpenCore en modo UEFI puro. El pendrive o disco interno
 debe tener OpenDuet instalado y conservar el archivo raiz `boot`.
 
-Layout esperado en la particion booteable:
+Layout esperado en la particion booteable (pendrive o disco interno):
 
 ```text
-/boot
-/EFI/BOOT/BOOTx64.efi
-/EFI/OC/OpenCore.efi
-/EFI/OC/config.plist
+/boot                       ← OBLIGATORIO. Sin este archivo no arranca.
+                               Lo genera: BootInstall_X64.tool de OpenDuet.
+                               No se copia manualmente; se instala con el script.
+/EFI/BOOT/BOOTx64.efi      ← Stage UEFI cargado por /boot.
+/EFI/OC/OpenCore.efi        ← Bootloader principal.
+/EFI/OC/config.plist        ← Configuracion.
 ```
+
+**Atencion**: si se copia la carpeta `EFI/` a un disco nuevo pero no se ejecuta
+`BootInstall_X64.tool` (o `efi-interno.sh`), el archivo `/boot` no existira y
+el equipo **no va a arrancar**. Siempre verificar que `/boot` este presente.
 
 No confundir `/boot` con `/EFI/BOOT/BOOTx64.efi`: son etapas distintas del
 arranque Legacy.
@@ -96,10 +202,13 @@ arranque Legacy.
 1. Probar la EFI en modo minimo.
 2. Si congela, tomar foto de la ultima linea verbose y revisar
    [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
-3. Si arranca, ejecutar [`detectar-hardware.sh`](detectar-hardware.sh) desde
+3. Si arranca, ejecutar [`scripts/detectar-hardware.sh`](scripts/detectar-hardware.sh) desde
    Mavericks y traer el nuevo `hardware-info.txt`.
-4. Seguir las prioridades de [`POST-INSTALACION.md`](POST-INSTALACION.md).
-5. Reactivar kexts uno por uno y documentar cada cambio.
+4. Para trabajo remoto, seguir [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md).
+5. Para instalar en disco interno o SSD nuevo, seguir
+   [`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md).
+6. Seguir las prioridades de [`POST-INSTALACION.md`](POST-INSTALACION.md).
+7. Reactivar kexts uno por uno y documentar cada cambio.
 
 ## Preparacion rapida del instalador
 
@@ -126,5 +235,5 @@ arranque Legacy.
 
 ## Politica de cambios
 
-No hacer `push` hasta que la EFI vuelva a estar probada y funcional en el
-equipo real.
+No hacer `push` sin pedido explicito y sin haber probado la EFI en el equipo
+real.
