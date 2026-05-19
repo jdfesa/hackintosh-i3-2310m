@@ -256,3 +256,45 @@ es el segundo stage que carga OpenCore.
 
 No hacer `push` sin pedido explicito y sin haber probado la EFI en el equipo
 real.
+
+## Para mi futuro yo
+
+Mavericks usa OpenSSH 6.2, que es tan viejo que las Mac modernas rechazan sus
+algoritmos por defecto. Para copiar archivos desde la Mac de trabajo a
+Mavericks hay que forzar compatibilidad con estas flags:
+
+**Enviar una carpeta:**
+
+```bash
+scp -O -r \
+  -o KexAlgorithms=diffie-hellman-group14-sha1 \
+  -o HostKeyAlgorithms=ssh-rsa \
+  -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+  -o Ciphers=aes128-ctr \
+  -o MACs=hmac-sha1 \
+  ~/Desktop/folder jd@192.168.8.39:~/Desktop/
+```
+
+**Enviar un archivo suelto** (sin `-r`):
+
+```bash
+scp -O \
+  -o KexAlgorithms=diffie-hellman-group14-sha1 \
+  -o HostKeyAlgorithms=ssh-rsa \
+  -o PubkeyAcceptedAlgorithms=+ssh-rsa \
+  -o Ciphers=aes128-ctr \
+  -o MACs=hmac-sha1 \
+  ~/Desktop/archivo.zip jd@192.168.8.39:~/Desktop/
+```
+
+Que hace cada flag:
+
+| Flag | Para que sirve |
+|------|---------------|
+| `-O` | Fuerza el protocolo SCP clasico. Sin esto, macOS moderno usa SFTP internamente y Mavericks no lo entiende. |
+| `-r` | Copia recursiva (carpetas completas con su contenido). |
+| `KexAlgorithms` | Usa intercambio de claves Diffie-Hellman antiguo que Mavericks soporta. |
+| `HostKeyAlgorithms` | Acepta claves RSA del servidor (Mavericks no tiene Ed25519). |
+| `PubkeyAcceptedAlgorithms` | Permite autenticacion con clave publica RSA. |
+| `Ciphers` | Usa cifrado AES-128-CTR, compatible con OpenSSH 6.2. |
+| `MACs` | Usa HMAC-SHA1 para verificar integridad, compatible con Mavericks. |
