@@ -2,7 +2,7 @@
 # =============================================================
 # SCRIPT COMPLETO DE DETECCION DE HARDWARE PARA HACKINTOSH
 # Mavericks 10.9 - Positivo BGH A470
-# Ejecutar: bash /Volumes/EFI/detectar-hardware.sh
+# Ejecutar: bash /Volumes/Install*/scripts/detectar-hardware.sh
 # Resultado: ~/Desktop/hardware-info.txt
 # =============================================================
 
@@ -119,5 +119,5 @@ echo "============================================" >> $OUT
 
 echo ""
 echo ">>> LISTO. Archivo guardado en: $OUT"
-echo ">>> Copialo al pendrive con:"
-echo "    cp ~/Desktop/hardware-info.txt /Volumes/EFI/"
+echo ">>> Copialo al instalador con:"
+echo "    cp ~/Desktop/hardware-info.txt /Volumes/Install*/"

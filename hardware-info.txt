@@ -29,7 +29,7 @@ Memory:
           Status: OK
           Manufacturer: 198
           Part Number: 99U5428-040.A01LF
-          Serial Number: 9E1CBE0D
+          Serial Number: <redacted>
 
         Bank 1/M2:
 
@@ -253,7 +253,7 @@ Audio:
     | |   |   | |   |   "BootProtocol" = 2
     | |   |   | |   |   "MaxFeatureReportSize" = 1
     | |   |   | |   |   "Product" = "Magic Trackpad"
-    | |   |   | |   |   "SerialNumber" = "CC2707202T0G61CAW"
+    | |   |   | |   |   "SerialNumber" = "<redacted>"
 --
 --
     | |   |     |   |   "IOUserClientClass" = "IOHIDLibUserClient"
@@ -414,7 +414,7 @@ USB:
               Product ID: 0x5678
               Vendor ID: 0x346d
               Version:  2.00
-              Serial Number: 6998521011882430549
+              Serial Number: <redacted>
               Speed: Up to 480 Mb/sec
               Manufacturer: USB
               Location ID: 0x1a140000 / 4
@@ -439,14 +439,14 @@ USB:
                   BSD Name: disk1s2
                   Mount Point: /Volumes/Install OS X Mavericks
                   Content: Apple_HFS
-                  Volume UUID: 06F60175-D9CD-3EAA-A911-DD6B6557FA0A
+                  Volume UUID: <redacted>
 
             USB2.0-CRW:
 
               Product ID: 0x0158
               Vendor ID: 0x0bda  (Realtek Semiconductor Corp.)
               Version: 58.88
-              Serial Number: 20071114173400000
+              Serial Number: <redacted>
               Speed: Up to 480 Mb/sec
               Manufacturer: Generic
               Location ID: 0x1a120000 / 3
@@ -488,7 +488,7 @@ USB:
               Product ID: 0x0265
               Vendor ID: 0x05ac  (Apple Inc.)
               Version:  8.71
-              Serial Number: CC2707202T0G61CAW
+              Serial Number: <redacted>
               Speed: Up to 12 Mb/sec
               Manufacturer: Apple Inc.
               Location ID: 0x1d120000 / 4
@@ -508,7 +508,7 @@ Storage:
       Writable: Yes
       Ignore Ownership: No
       BSD Name: disk0s2
-      Volume UUID: 0B4E414B-43FE-3BF9-BAE7-BE0853363086
+      Volume UUID: <redacted>
       Physical Drive:
           Media Name: WDC WD1600BEVT-22A23T0 Media
           Medium Type: Rotational
@@ -526,7 +526,7 @@ Storage:
       Writable: Yes
       Ignore Ownership: Yes
       BSD Name: disk1s2
-      Volume UUID: 06F60175-D9CD-3EAA-A911-DD6B6557FA0A
+      Volume UUID: <redacted>
       Physical Drive:
           Media Name: VendorCo ProductCode Media
           Protocol: USB
@@ -712,7 +712,7 @@ Power:
       Wattage (W): 60
       Revision: 0x0000
       Family: 0x00ba
-      Serial Number: 0x00453cbe
+      Serial Number: <redacted>
       Charging: No
 
   |   "IOKitDiagnostics" = {"Container allocation"=3907992,"Instance allocation"=2788768,"Pageable allocation"=573231808,"Classes"={"IOGraphicsDevice"=1,"IOACPIPlatformExpert"=1,"AppleEFIRuntime"=1,"VRAMAllocationMethod"=0,"g6_MainRing"=1,"IOGUIDPartitionScheme"=2,"AppleAHCIPolledAdapter"=1,"IOUSBInterfaceUserClientV2"=0,"IOUSBLog"=1,"IOAHCIPortMultiplier"=0,"IOSerialDriverSync"=0,"AppleSmartBatteryManagerUserClient"=0,"IOUSBControllerListElement"=1,"IOUSBControllerV3"=1,"ApplePS2Controller"=1,"APCEventSource"=1,"IODTPlatformExpert"=1,"IOCDPartitionScheme"=0,"IOMemoryCursor"=0,"PMAssertionsTracker"=1,"AppleMCP79AHCI"=0,"IOBDServices"=0,"IOPMCompletionQueue"=1,"IOGraphicsWorkLoop"=2,"IOCDMedia"=0,"com_apple_AppleFSCompression_AppleFSCompressionTypeLZVN"=1,"IOSharedDataQueue"=0,"AppleMCP89AHCI"=0,"IOPCIDevice"=14,"IOStateReporter"=0,"IOBootFramebuffer"=0,"IOResources"=1,"IOSCSIProtocolServices"=3,"IOSurfaceRootUserClient"=2,"IOHWMonitor"=1,"IOUSBCompositeDriver"=4,"AppleBroadcomBluetoothHostController"=0,"PMTraceWorker"=1,"IOHIDParamUserClient"=1,"AppleAHCIRequestTimer"=1,"SCSITask"=0,"IOWorkQueue"=1,"BroadcomBluetoothHostController"=0,"AppleXsanFilter"=1,"IOMbufMemoryCursor"=0,"IOGPU"=0,"BrightnessRequestEventSource"=0,"Gen6Surface"=5,"IOHIDPointingDevice"=1,"SMCLightSensor"=0,"IOBDBlockStorageDevice"=0,"IOUSBRootHubDevice"=2,"Gen5752DContext"=4,"Gen6DVDContext"=0,"IOKitDiagnostics"=1,"AppleSMCControl"=1,"IONetworkData"=0,"IORegistryPlane"=5,"AppleHIDKeyboardEventDriverV2"=0,"IOWorkLoop"=26,"AppleACPICPUInterruptController"=1,"ApplePS2Elan"=0,"IOHIDResourceDeviceUserClient"=0,"PAVPSandyBridge"=1,"IOUSBHubPolicyMaker"=1,"IOLittleMemoryCursor"=0,"AppleAHCIWatchdogTimer"=1,"AppleACPIEventController"=1,"AppleGraphicsDeviceControl"=0,"OSBoolean"=2,"AppleAHCIWorkLoopLock"=1,"IOHIDAsyncReportQueue"=0,"AppleAHCIPort"=1,"PMEventDetails"=0,"AppleMEClientController"=1,"IOSCSIPeripheralDeviceType00"=2,"IOBluetoothSerialClientModemStreamSync"=0,"IOBootNDRV"=0,"IORegistryIterator"=0,"AppleVTD"=0,"IOKernelDebugger"=0,"IOBluetoothRFCOMMChannel"=0,"IORegistryEntry"=39,"IOHIKeyboardMapper"=3,"IOUSBHubDevice"=3,"IONDRVFramebuffer"=0,"IOUSBInterfaceIterator"=0,"AppleUSBHSHubUserClient"=0,"STUCWorkLoopLock"=0,"IOCatalogue"=1,"IOUSBIsocCommand"=100,"IOApplePartitionScheme"=0,"AppleEHCISplitIsochTransferDescriptor"=0,"KDIURL"=0,"IOHIKeyboard"=3,"IOStorage"=3,"IOSCSIHierarchicalLogicalUnit"=0,"IOPCIMessagedInterruptController"=1,"IOHDIXController"=1,"IOMbufNaturalMemoryCursor"=0,"AppleCSRBluetoothHostController"=0,"PMHaltWorker"=0,"IOUserEthernetInterface"=0,"IOBlockStorageServices"=2,"IOCommandGate"=142,"IOGen575Tree"=405,"IOBDMedia"=0,"IOHIDKeyboard"=1,"NVHDAEnabler"=0,"SMCWatchDogTimer"=1,"OSSerialize"=1,"IORangeAllocator"=3,"AppleEHCIIsochTransferDescriptor"=0,"IOSurface"=7,"IOAccelerator"=1,"IntelMemory"=1,"IOOutputQueue"=0,"Dont_Steal_Mac_OS_X"=1,"IOUSBPipeV2"=23,"IOFilterInterruptEventSource"=5,"IntelGenRingBuffer"=1,"RootDomainUserClient"=29,"IOHIDResourceQueue"=0,"AppleACPICPU"=4,"IOInterleavedMemoryDescriptor"=0,"IOFramebufferI2CInterface"=4,"MEICompletion"=1,"IONDRV"=0,"IOPMPowerStateQueue"=1,"AppleFDEKeyStore"=1,"IOHIDEventSystemQueue"=0,"IOBluetoothHostController"=0,"IOGeneralMemoryDescriptor"=238,"IORS232SerialStreamSync"=0,"IOHIDStackShotUserClient"=1,"IOEventSource"=16,"AppleUSBComposite"=0,"IOMbufLittleMemoryCursor"=0,"IOBluetoothDataQueue"=0,"AppleACPIACAdapter"=0,"IOUserNotification"=2,"IOUserEthernetResourceUserClient"=0,"IOBluetoothHCIRequest"=0,"AppleSMBusController"=0,"IOHIDLibUserClient"=16,"IOAHCIBlockStorageDriver"=1,"IOI2CInterface"=1,"IOUSBCommand"=100,"AppleHPET"=1,"ACPI_SMC_Idle_CtrlLoop"=0,"IOPMRequest"=0,"IOBluetoothRFCOMMConnection"=0,"IOPlatformSensor"=0,"IOBluetoothMemoryBlockQueue"=0,"IONDRVDevice"=0,"IOAHCIBlockStorageDevice"=1,"IOHIDConsumer"=1,"IOHIDEventDriver"=3,"AppleAHCI"=1,"IOPlatformControl"=2,"IOEthernetController"=0,"IOPanicPlatform"=0,"IOServicePM"=62,"AppleHDAWorkLoop"=1,"AppleUSBEHCI"=2,"IOBluetoothMemoryBlock"=0,"OSData"=3542,"IOHDIXCommand"=0,"IOUSBControllerIsochListElement"=0,"IOInterruptEventSource"=46,"IOHWControl"=1,"IOModemSerialStreamSync"=0,"IOHDACodecDevice"=2,"IOBluetoothL2CAPInformationFrameMemoryBlock"=0,"IOHIDDeviceShim"=2,"ALCUserClientProvider"=0,"IOUSBDevice"=5,"AppleSMBusDevice"=0,"AGPMClient"=0,"IODisplayParameterHandler"=2,"IOSCSIPeripheralDeviceType07"=0,"AppleACPIPS2Nub"=1,"IODVDBlockStorageDevice"=1,"IOUSBControllerIsochEndpoint"=0,"AppleAHCIDiskQueueManager"=1,"OSSymbol"=3883,"IODVDBlockStorageDriver"=1,"OSCollection"=5,"IOAGPDevice"=0,"AppleACPILid"=1,"AppleAHCIDiskDriver"=1,"AppleSMBusControllerUserClient"=0,"IOSyncer"=0,"IODisplayConnect"=1,"AppleEHCIitdMemoryBlock"=0,"AppleUSBHubPort"=18,"AppleSMBIOS"=1,"AppleSmartBattery"=1,"IOMemoryDescriptor"=2,"IONaturalMemoryCursor"=0,"IOHIDInterface"=8,"SMCProcessor"=1,"IOAHCIDiskQueueManager"=1,"IOCDMediaBSDClient"=0,"OSObjectWrapper"=0,"SMCBatteryManager"=1,"IODisplayWrangler"=1,"IOWatchDogTimer"=1,"AppleGraphicsPolicyClient"=2,"AppleACPIPlatformUserClient"=0,"IOBacklightDisplay"=0,"AppleFDEKeyStoreUserClient"=0,"AppleIntelPchSeriesAHCIPort"=3,"IOBluetoothLocalUtilityEventSource"=0,"IOGen575DVDContext"=0,"IOBigMemoryCursor"=0,"IOBreaker"=0,"AppleAPICInterruptController"=1,"IOUSBDeviceUserClientV2"=0,"EFIData"=34,"IOAHCIDevice"=2,"AppleACPIPowerResource"=0,"AppleHWAccess"=1,"AppleACPIInterruptLink"=0,"IOIntelSurface"=1,"_IOServiceInterestNotifier"=127,"ACPI_SMC_GPU_CtrlLoop"=1,"IOCPU"=1,"IOUSBNub"=2,"IOAHCIPollerInterface"=1,"BatteryManager"=1,"AppleMCCSControlFamily"=1,"CSRBluetoothHostController"=0,"ApplePS2Keyboard"=1,"IOHWSensor"=0,"ACPI_SMC_CtrlLoop"=1,"IOPlatformPluginThermalProfile"=0,"AppleAHCIWorkLoop"=3,"IOUSBBus"=1,"AppleSMCFamily"=1,"IOHIDPointing"=2,"AppleMCCSControlCello"=0,"AppleSNBFBUserClient"=0,"IOSurfaceClient"=13,"AppleAHCISerialATAPITimer"=1,"IOHIDSecurePromptClient"=0,"IOUSBMassStorageUFIDevice"=0,"IODMAController"=0,"AppleHIDKeyboardEventDriver"=1,"Gen575Shared"=3,"IOUSBControllerV2"=1,"IOPCIBridge"=2,"IOCDBlockStorageDriver"=1,"AppleGraphicsControl"=1,"VirtualSMC"=1,"IOIntelGLContext"=1,"IOHDIXControllerUserClient"=0,"IOUSBControllerUserClient"=0,"IOBluetoothDevice"=0,"SCSITaskUserClientIniter"=1,"AppleSCSISubsystemGlobals"=1,"IOMbufBigMemoryCursor"=0,"IOMapper"=0,"IOIntelAccelerator"=1,"IOAHCISerialATAPI"=1,"IOPMPowerSource"=1,"MEIClientList"=1,"AppleEHCIsitdMemoryBlock"=0,"OSMetaClass"=0,"AppleEFINVRAM"=1,"AppleSMBusControllerICH"=0,"IOUserClient"=18,"IOHDIXHDDriveOutKernelUserClient"=0,"IOSCSIMultimediaCommandsDevice"=1,"AppleMCCSUserClient"=0,"IOBluetoothHCIPacketLogUserClient"=0,"IOHDACodecDriver"=0,"ACPI_SMC_PluginUserClient"=0,"AppleECSMBusController"=0,"AppleEHCIIsochEndpoint"=0,"AHCISMARTUserClient"=0,"AppleSMCPDRC"=1,"IOGen575GraphicsClient"=2,"IOUserEthernetController"=0,"AppleAHCIEventSource"=3,"AppleUSBEHCISplitPeriodicEndpoint"=71,"IONetworkMedium"=0,"OSObject"=56,"AppleGraphicsDeviceControlClient"=0,"IOPMWorkQueue"=1,"IOHIDevice"=2,"IOHIPointing"=1,"ACPI_SMC_PlatformPlugin"=1,"IOUSBMassStorageClass"=2,"AppleUSBEHCITTInfo"=1,"Gen6Accelerator"=1,"IOConditionLock"=0,"IOI2CInterfaceUserClient"=0,"PMSettingObject"=2,"OSSerializer"=8,"IOSimpleReporter"=0,"IOGen5752DContext"=1,"IOPlatformPluginFamilyPriv"=1,"_IOOpenServiceIterator"=0,"IOPlatformPluginFamily"=1,"IOPlatformPluginLegacy"=1,"IOBluetoothRFCOMMChannelUserClient"=0,"IOSCSIProtocolInterface"=2,"IOHIDKeyboardDevice"=1,"AppleSMC"=1,"SMCPolledInterface"=1,"AGPMHeuristic0"=0,"IOHIDEventRepairDriver"=0,"IOCPUInterruptController"=1,"AppleSATLSMARTUserClient"=0,"IOUSBCommandPool"=4,"IntelGLContext"=1,"IOAppleLabelScheme"=0,"IOHIDSystem"=1,"IOGatedOutputQueue"=0,"AppleSMCClient"=1,"PMSettingHandle"=2,"IOBlockStorageDriver"=4,"IODMACommand"=201,"AppleEHCItdMemoryBlock"=2,"IOBluetoothRFCOMMMemoryBlock"=0,"IOHIDUserClient"=1,"IOPMinformeeList"=62,"IOHIDEventService"=1,"AppleMCP79AHCIPort"=0,"IOSerialATARequestFIS"=70,"SMCSMBusController"=1,"AppleACPIButton"=2,"IOHIDResource"=1,"IOHIDWorkLoop"=1,"PAVPSandyBridgeEventSource"=1,"IONotifier"=3,"MEIDriverIOEventSource"=3,"IODMAEventSource"=0,"IOBDMediaBSDClient"=0,"AppleICH8AHCI"=0,"IntelAccelerator"=1,"AppleACPIEC"=1,"IOSCSITargetDevice"=0,"IOInterruptController"=5,"IOFramebufferParameterHandler"=4,"OSKext"=101,"_IOFramebufferNotifier"=19,"IOHDACodecDeviceUserClient"=0,"IOHDIXHDDriveOutKernel"=0,"AppleSmartBatteryManager"=1,"AppleAHCIDiskPolledInterface"=1,"AppleUSBDiagnostics"=2,"AGPM"=1,"IOUSBMassStorageUFISubclass"=0,"AGPMHeuristic1"=0,"g6_MediaRing"=1,"IOSCSIMultipathedLogicalUnit"=0,"IOHIDEvent"=0,"IOACPIPlatformDevice"=105,"Gen575Device"=3,"AHCIRequest"=67,"MEIEventSource"=1,"IOFramebufferSharedUserClient"=1,"IOUSBPipe"=1,"AppleUpstreamUserClient"=0,"IOReportLegend"=0,"IOPacketQueue"=0,"WhateverGreen"=1,"IOPMPowerSourceList"=0,"AppleHDAController"=1,"AppleAHCISerialATAPIWorkLoopLock"=1,"AGPMController"=1,"IOMemoryMap"=745,"_IOConfigThread"=0,"AppleUSBEHCIHubInfo"=4,"IOSCSIBlockCommandsDevice"=1,"IOHDIXHDDrive"=0,"IOHIDEventServiceQueue"=0,"IOMediaBSDClient"=7,"IOBluetoothL2CAPChannel"=0,"ApplePS2KeyboardDevice"=1,"IOSCSIPrimaryCommandsDevice"=2,"IOPolledInterface"=5,"IOBluetoothWorkLoop"=0,"IOHDIXCommandQueue"=0,"IODiskImageBlockStorageDeviceOutKernel"=0,"IOFramebuffer"=1,"IOBluetoothHCIController"=1,"IOUSBInterfaceUserClientV3"=0,"AGPMHeuristic2"=1,"AppleIntelFramebuffer"=4,"IODTNVRAM"=1,"IOBluetoothHCIUserClient"=0,"IOBluetoothL2CAPSignalChannel"=0,"IOGen575Device"=1,"IOUSBInterface"=12,"IOSurfaceRoot"=1,"IODisplay"=1,"IOCDBlockStorageDevice"=1,"IOHITablet"=1,"IOBluetoothSerialClient"=0,"IOMultiMemoryDescriptor"=0,"ApplePS2SynapticsTouchPad"=1,"OSNumber"=4889,"IOPlatformExpertDevice"=1,"AppleMCP89AHCIPort"=0,"IOServiceUserNotification"=102,"SCSITaskUserClient"=0,"IOHIDElementPrivate"=2222,"AppleEHCIQueueHead"=126,"IOSharedInterruptController"=3,"ApplePS2ALPSGlidePoint"=0,"IOSCSIPeripheralDeviceNub"=3,"IODVDMediaBSDClient"=0,"AppleHWAccessUserClient"=0,"IOUSBWorkLoop"=2,"IOSerialStreamSync"=0,"IOUserEthernetResource"=1,"IOSerialBSDClient"=0,"AppleAHCIPortPolledAdapter"=1,"ApplePS2SentelicFSP"=0,"AppleALC"=1,"IODeblocker"=0,"IOFilterScheme"=0,"VRAMSegmentMethod"=0,"Lilu"=1,"AGPMHeuristic3"=0,"IOReportUserClient"=0,"IOPMinformee"=44,"IONetworkInterface"=0,"AGPMEventSource"=1,"IOHIDElement"=1,"IOHDIXHDDriveNub"=0,"IOEthernetInterface"=0,"IOHistogramReporter"=0,"AppleACPIPlatformExpert"=1,"AppleIntelSNBGraphicsFB"=1,"IOFramebufferUserClient"=4,"IOPlatformStateSensor"=0,"OSString"=5933,"IOService"=113,"ApplePolicyControl"=1,"IOPlatformDevice"=4,"IODataQueue"=0,"IOBluetoothL2CAPChannelUserClient"=0,"IOHITabletPointer"=0,"IOPowerConnection"=60,"IOBluetoothL2CAPSupervisoryFrameMemoryBlock"=0,"AppleACPIEventPoller"=1,"IOUSBLowLatencyCommand"=0,"AppleHDAControllerUserClient"=0,"IOBasicOutputQueue"=0,"OSSet"=688,"AppleIntelPchSeriesAHCI"=1,"IOPlatformPluginDevice"=1,"IOBDBlockStorageDriver"=0,"com_apple_AppleFSCompression_AppleFSCompressionTypeZlib"=1,"IOCommandPool"=5,"IOBluetoothDeviceUserClient"=0,"IOBluetoothRFCOMMConnectionUserClient"=0,"AppleSMBusControllerMCP"=0,"IOPartitionScheme"=2,"IOPlatformCtrlLoop"=2,"IOPlatformExpert"=1,"ApplePS2MouseDevice"=4,"AppleLPC"=1,"IOSCSIPeripheralDeviceType05"=1,"IOSMBusController"=1,"IOUSBController"=1,"g6_RingBuffer"=3,"IOBluetoothInactivityTimerEventSource"=1,"IOBluetoothACLMemoryDescriptor"=0,"AppleIntelCPUPowerManagement"=1,"OSIterator"=2,"OSCollectionIterator"=7,"IOTimerEventSource"=61,"AGPMHeuristic4"=0,"OSArray"=2918,"AppleKeyStoreUserClient"=3,"IOPMTimeline"=0,"ApplePS2Device"=2,"IOReporter"=0,"IONetworkController"=0,"IOCommand"=51,"IOBlockStorageDevice"=3,"IOMachPort"=325,"IOMedia"=7,"IOAHCIPortInterface"=1,"com_apple_BootCache"=1,"OSDictionary"=5721,"AGPMHeuristic"=1,"IOSurfaceDeviceCache"=7,"IODVDMedia"=0,"IOReportHub"=1,"IOBluetoothSerialClientSerialStreamSync"=0,"IOAccelerationUserClient"=1,"IOBluetoothObject"=0,"g6_BlitRing"=1,"AppleMCCSIOController"=8,"AppleRTC"=1,"AppleDisplay"=1,"IOSurfaceSendRight"=0,"IOBufferMemoryDescriptor"=470,"IOUSBUserClientInit"=1,"IOBluetoothSerialManager"=1,"IONetworkStackUserClient"=1,"IOPMrootDomain"=1,"AppleUSBHub"=4,"AppleRTCUserClient"=3,"IOFDiskPartitionScheme"=0,"IOUFIStorageServices"=0,"com_apple_AppleFSCompression_AppleFSCompressionTypeDataless"=1,"IOBluetoothTimerEventSource"=0,"IOHIDUserDevice"=0,"AppleIntelMEIDriver"=1,"IOSMBusRequest"=0,"IODVDServices"=1,"AppleUSBHIDKeyboard"=2,"HDCPCtrl"=3,"IOHDAController"=1,"IORootParent"=1,"IOHIDDevice"=2,"AppleBacklightDisplay"=0,"AppleACPIPCI"=1,"AppleEHCIedMemoryBlock"=3,"AppleEmbeddedKeyboard"=1,"IONetworkStack"=1,"IOGen575Shared"=1,"IOHIDEventSystemUserClient"=3,"IntelSurface"=1,"IOAHCIPort"=1,"OSOrderedSet"=155,"ApplePS2SmbusDevice"=0,"IOServiceMessageUserNotification"=100,"_IOServiceNotifier"=168,"Gen6GLContext"=4,"_IOServiceJob"=0,"ALCUserClient"=0,"ECEnabler"=1,"IOKDP"=0,"AppleMCCSParameterHandler"=4,"AppleMCCSControlModule"=4,"IONetworkUserClient"=0,"AppleUpstreamUserClientDriver"=4,"IOCompactDiscServices"=0,"IOPMRequestQueue"=2,"IOPCI2PCIBridge"=2,"IOPCIConfigurator"=1,"IOUSBHIDDriver"=5,"AppleKeyStore"=1,"IOSubMemoryDescriptor"=11,"IOSCSILogicalUnitNub"=0,"IOHDACodecFunction"=0,"IOHDAStream"=0,"IOHIDEventQueue"=0,"IOUSBNotification"=0,"IOBluetoothL2CAPMemoryBlock"=0},"IOMalloc allocation"=35911444}
@@ -769,13 +769,13 @@ Index Refs Address            Size       Wired      Name (Version) <Linked Again
     |   "board-id" = <"Mac-94245B3640C91C81">
     |   "IOInterruptSpecifiers" = (<0900000005000000>)
     |   "IOPolledInterface" = "SMCPolledInterface is not serializable"
-    |   "serial-number" = <4d4c3748000000000000000000433032444630314b4d4c3748000000000000000000000000000000000000>
+    |   "serial-number" = <redacted>
     |   "IOInterruptControllers" = ("io-apic-0")
-    |   "IOPlatformUUID" = "3EEC7657-6CEC-5F94-8EA4-B0F8F792816D"
+    |   "IOPlatformUUID" = "<redacted>"
     |   "clock-frequency" = <0084d717>
     |   "IOPlatformSystemSleepPolicy" = <534c5054010006002000000020000000010000000505000008000000080000000100000000010000d4070000100000000100000005050000c5070000010000000100000005050000c407000000000000020000000d1900000000000000000000000000000d110000>
     |   "manufacturer" = <"Acidanthera">
-    |   "IOPlatformSerialNumber" = "C02DF01KML7H"
+    |   "IOPlatformSerialNumber" = "<redacted>"
     |   "system-type" = <02>
     |   "product-name" = <"MacBookPro8,1">
     |   "model" = <"MacBookPro8,1">
@@ -792,7 +792,7 @@ Index Refs Address            Size       Wired      Name (Version) <Linked Again
     | | |   "System Capabilities" = 15
     | | |   "IOUserClientClass" = "RootDomainUserClient"
     | | |   "Hibernate File" = "/var/vm/sleepimage"
-    | | |   "BootSessionUUID" = "28BC71AB-A80D-43DC-9CAA-155334F58D6A"
+    | | |   "BootSessionUUID" = "<redacted>"
     | | |   "Hibernate Mode" = 3
     | | |   "AppleClamshellCausesSleep" = No
     | | |   "AppleClamshellState" = Yes
@@ -875,13 +875,13 @@ Index Refs Address            Size       Wired      Name (Version) <Linked Again
     |   "board-id" = <"Mac-94245B3640C91C81">
     |   "IOInterruptSpecifiers" = (<0900000005000000>)
     |   "IOPolledInterface" = "SMCPolledInterface is not serializable"
-    |   "serial-number" = <4d4c3748000000000000000000433032444630314b4d4c3748000000000000000000000000000000000000>
+    |   "serial-number" = <redacted>
     |   "IOInterruptControllers" = ("io-apic-0")
-    |   "IOPlatformUUID" = "3EEC7657-6CEC-5F94-8EA4-B0F8F792816D"
+    |   "IOPlatformUUID" = "<redacted>"
     |   "clock-frequency" = <0084d717>
     |   "IOPlatformSystemSleepPolicy" = <534c5054010006002000000020000000010000000505000008000000080000000100000000010000d4070000100000000100000005050000c5070000010000000100000005050000c407000000000000020000000d1900000000000000000000000000000d110000>
     |   "manufacturer" = <"Acidanthera">
-    |   "IOPlatformSerialNumber" = "C02DF01KML7H"
+    |   "IOPlatformSerialNumber" = "<redacted>"
     |   "system-type" = <02>
     |   "product-name" = <"MacBookPro8,1">
     |   "model" = <"MacBookPro8,1">

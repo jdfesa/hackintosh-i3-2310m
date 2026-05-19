@@ -12,7 +12,13 @@ Sintoma actual:
 * OpenCore llega al picker.
 * El menu es basico, con opciones como instalar Mavericks, iniciar desde disco
   y recovery.
-* Al seleccionar el sistema, el equipo queda congelado.
+* El sistema instalado ya arranca.
+* El equipo ya arranca desde disco interno sin pendrive.
+* Teclado y trackpad internos funcionan.
+* Ethernet interno no aparece en red; `ifconfig en0` reporta que `en0` no
+  existe.
+* Un adaptador USB Ethernet ya permite conexion de red.
+* SSH remoto funciona mediante tunel reverso cuando SSH directo no tiene ruta.
 
 Hallazgos:
 
@@ -25,25 +31,37 @@ Hallazgos:
 * `Lilu.kext` habia sido bajado a 1.2.6 para Mavericks, pero todavia habia
   plugins modernos activos o presentes. Esto puede provocar fallos silenciosos
   por mezcla de versiones.
+* El hardware Ethernet interno fue confirmado como Realtek `10ec:8168`.
+* `RealtekRTL8111.kext` v2.2.2 coincide con ese PCI ID, pero OpenCore reporta:
+  `Prelinked injection RealtekRTL8111.kext ... - Invalid Parameter`.
+* Por ese fallo de inyeccion, Mavericks no llega a crear `en0`.
 
 Fix aplicado:
 
 * Se resincronizo `EFI/` al pendrive preservando `/Volumes/EFI/boot`.
-* Se dejo el arranque en modo minimo:
+* Se dejo el arranque base en modo minimo:
   * `FakeSMC.kext` activado.
   * `VoodooPS2Controller.kext` y plugins PS/2 activados.
+  * `RealtekRTL8111.kext` v2.2.2 presente, pero desactivado en OpenCore.
   * `Lilu.kext`, `AppleALC.kext`, `ECEnabler.kext`, `WhateverGreen.kext`,
-    red, bateria y brillo desactivados temporalmente.
+    bateria y brillo desactivados temporalmente.
 * Se agregaron `-v -f debug=0x100 keepsyms=1 watchdog=0` a `boot-args` para
   obtener una falla mas visible si vuelve a congelar.
+* Se agrego `scripts/red.sh` para instalar el kext en
+  `/System/Library/Extensions` y reconstruir caches desde Mavericks.
+* Se agrego `scripts/diag.sh` para generar reporte de kexts, interfaces,
+  IORegistry y logs.
+* Se documento la conexion remota en [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md).
+* Se instalo OpenDuet/EFI en el disco interno; procedimiento documentado en
+  [`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md).
 
-Proxima prueba:
+Estado siguiente:
 
-1. Arrancar desde el pendrive corregido.
-2. Elegir iniciar desde el disco instalado.
-3. Si congela, sacar foto de la ultima linea verbose.
-4. Al volver a montar el pendrive, buscar si existe `opencore-*.txt` en la raiz
-   de la EFI.
+1. Mantener red USB Ethernet como acceso de rescate.
+2. Investigar Ethernet interno `10ec:8168`.
+3. Continuar con audio, graficos, bateria y brillo.
+4. Si se cambia HDD por SSD, repetir
+   [`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md).
 
 ## Problemas conocidos y fixes aplicados
 
@@ -65,6 +83,37 @@ interno. La raiz de la particion debe contener:
 /EFI/OC/OpenCore.efi
 /EFI/OC/config.plist
 ```
+
+Estado actual:
+
+Resuelto en el disco interno con `scripts/efi-interno.sh`. El equipo ya no
+depende del pendrive para arrancar.
+
+### SSH con Mavericks
+
+Problema:
+
+SSH directo desde la Mac de trabajo hacia la BGH podia fallar con `No route to
+host`, aunque la BGH si podia hacer `ping` hacia la Mac de trabajo. Ademas,
+Mavericks usa OpenSSH 6.2 y puede fallar contra OpenSSH moderno con `no hostkey
+alg`.
+
+Fix:
+
+* Activar Remote Login en Mavericks:
+  ```bash
+  sudo systemsetup -setremotelogin on
+  ```
+* Habilitar compatibilidad `ssh-rsa` temporalmente en la Mac de trabajo.
+* Autorizar una clave RSA temporal en `~/.ssh/authorized_keys` de la BGH.
+* Usar tunel reverso:
+  ```bash
+  ssh -o StrictHostKeyChecking=no -N -R 2222:localhost:22 USUARIO@IP_MAC_TRABAJO
+  ```
+* Entrar desde la Mac de trabajo por `127.0.0.1:2222` forzando algoritmos
+  compatibles con Mavericks.
+
+Procedimiento completo: [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md).
 
 ### Kernel panic por SMBIOS incorrecto
 
@@ -131,6 +180,71 @@ Regla actual:
 
 No reactivar kexts de soporte extra hasta confirmar arranque estable con la EFI
 minima.
+
+### Ethernet interno sin `en0`
+
+Problema:
+
+El arranque muestra mensajes relacionados con Ethernet, pero al entrar en
+Mavericks no existe `en0` y red no aparece en Preferencias del Sistema.
+
+Hallazgo:
+
+El log de OpenCore en la raiz de la EFI muestra:
+
+```text
+OC: Prelinked injection RealtekRTL8111.kext ... - Invalid Parameter
+```
+
+Esto indica que OpenCore intenta cargar el kext, pero la inyeccion prelinked
+falla antes de que Mavericks adjunte el driver al dispositivo `10ec:8168`.
+
+Fix/prueba:
+
+No insistir con la inyeccion de este kext desde OpenCore. Instalarlo dentro del
+sistema Mavericks:
+
+```bash
+bash /Volumes/Install*/scripts/red.sh
+```
+
+Despues de reiniciar:
+
+```bash
+bash /Volumes/Install*/scripts/ver.sh
+```
+
+Si aparece interfaz pero no IP:
+
+```bash
+sudo ipconfig set en0 DHCP
+```
+
+Cambiar `en0` por la interfaz real si macOS la enumera como `en1` o `en2`.
+
+### USB Ethernet detectado sin IP
+
+Problema:
+
+El adaptador USB Ethernet puede mostrar una MAC, pero no recibir IP.
+
+Estado actual:
+
+Ya se logro conexion por el adaptador USB Ethernet. Se usa como red provisoria
+para activar SSH y continuar configurando Mavericks.
+
+Causas probables:
+
+* El servicio de red no fue creado automaticamente.
+* DHCP no asigno direccion.
+* El adaptador necesita un driver especifico para Mavericks.
+
+Diagnostico:
+
+```bash
+bash /Volumes/Install*/scripts/ver.sh
+bash /Volumes/Install*/scripts/diag.sh
+```
 
 ### Picker sin teclado
 

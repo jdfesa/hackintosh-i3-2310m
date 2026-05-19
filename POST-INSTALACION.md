@@ -4,12 +4,15 @@ Este documento registra los pasos posteriores a la primera instalacion exitosa d
 
 Documentos relacionados:
 
-* [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md): errores historicos, fixes aplicados y diagnostico del cuelgue actual.
+* [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md): errores historicos, fixes aplicados y pendientes actuales.
 * [`DETECCION-HARDWARE.md`](DETECCION-HARDWARE.md): como generar y actualizar `hardware-info.txt`.
+* [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md): conexion remota, compatibilidad SSH y tunel reverso.
+* [`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md): instalacion de EFI interna y repeticion del proceso en SSD.
 
 ## Estado inicial
 
-La instalacion ya finalizo y la EFI actual permite arrancar el instalador/sistema con OpenCore en modo Legacy.
+La instalacion ya finalizo y la EFI actual permite arrancar Mavericks con
+OpenCore en modo Legacy desde el disco interno.
 
 Actualizacion 2026-05-19:
 
@@ -18,8 +21,13 @@ Actualizacion 2026-05-19:
 * Se resincronizo `EFI/` al pendrive preservando el archivo legacy `/boot`.
 * Para la siguiente prueba de arranque, la EFI queda en modo minimo:
   `FakeSMC.kext` + `VoodooPS2Controller.kext`.
-* `Lilu.kext`, `AppleALC.kext`, `ECEnabler.kext`, `WhateverGreen.kext` y red
-  quedan desactivados hasta confirmar que el sistema deja de congelarse.
+* `Lilu.kext`, `AppleALC.kext`, `ECEnabler.kext` y `WhateverGreen.kext`
+  quedan desactivados hasta confirmar Ethernet.
+* `RealtekRTL8111.kext` queda presente en `EFI/OC/Kexts`, pero no se inyecta
+  desde OpenCore porque el log reporta `Invalid Parameter`.
+* Teclado y trackpad internos funcionan.
+* La red funciona por adaptador USB Ethernet.
+* El equipo ya no depende del pendrive para arrancar.
 
 Valores criticos que no conviene tocar por ahora:
 
@@ -32,23 +40,24 @@ Valores criticos que no conviene tocar por ahora:
 
 ## Prioridad 1 - Entrada PS/2
 
-Problema actual: no funcionan teclado ni trackpad internos.
+Estado actual: resuelto. Teclado y trackpad internos funcionan.
 
-Causa probable: la EFI tiene `VoodooPS2Controller.kext` 2.3.8, pero ese kext y sus plugins declaran `LSMinimumSystemVersion = 10.10`. Mavericks es 10.9.5, por lo que puede no cargar.
+Referencia historica:
 
-Accion recomendada:
+La EFI original tenia `VoodooPS2Controller.kext` 2.3.8, pero ese kext y sus
+plugins declaraban `LSMinimumSystemVersion = 10.10`. Mavericks es 10.9.5, por
+lo que podia no cargar.
 
-1. Usar temporalmente teclado y mouse USB.
-2. Reemplazar `EFI/OC/Kexts/VoodooPS2Controller.kext` por una version compatible con Mavericks.
-3. Candidatos conocidos:
-   * `VoodooPS2Controller` de RehabMan version 1.8.7 o posterior de la rama antigua, porque corrige un bug que impedia cargar en OS X 10.9.
-   * `VoodooPS2-10.9 Only` version 1.8.3-10.9, recompilada especificamente para Mavericks.
-4. Actualizar `Kernel -> Add` con el nuevo bundle y sus plugins.
-5. Verificar en Mavericks:
-   ```bash
-   kextstat | grep -i voodoo
-   grep -i voodoo /var/log/system.log
-   ```
+Fix aplicado:
+
+* Se uso `VoodooPS2Controller.kext` compatible con Mavericks.
+* Se habilitaron sus plugins PS/2 en `Kernel -> Add`.
+
+Verificacion:
+
+```bash
+kextstat | grep -i voodoo
+```
 
 Notas:
 
@@ -57,66 +66,80 @@ Notas:
 
 ## Prioridad 2 - Red Ethernet
 
-Problema actual: no hay red.
+Problema actual: hay red por adaptador USB Ethernet, pero el puerto Ethernet
+interno no funciona todavia.
 
 Estado de la EFI actualizado:
 
 * `AtherosE2200Ethernet.kext` esta desactivado y pide minimo 10.13.
-* `RealtekRTL8111.kext` esta desactivado y pide minimo 10.14.
+* `RealtekRTL8111.kext` moderno esta descartado porque pide minimo 10.14.
 * `IntelMausi.kext` fue desactivado porque probablemente no corresponde al hardware de esta notebook.
 * `RealtekRTL8100.kext` 2.0.1 fue desactivado: apunta a `10ec:8136` pero el chip real es `10ec:8168`.
-* `RealtekRTL8111.kext` 2.4.2 está desactivado porque declara mínimo 10.14.
-* **SOLUCIÓN APLICADA**: El chip Ethernet fue identificado desde el IORegistry como `vendor-id=0x10EC, device-id=0x8168` -> **Realtek RTL8168/RTL8111**.
-* Se reemplazó el `.kext` en `EFI/OC/Kexts/` por **`RealtekRTL8111` v2.2.2** (sin `LSMinimumSystemVersion`, compatible con macOS 10.6+).
+* El chip Ethernet fue identificado desde el IORegistry como `vendor-id=0x10EC, device-id=0x8168` -> **Realtek RTL8168/RTL8111**.
+* Se reemplazo el `.kext` en `EFI/OC/Kexts/` por **`RealtekRTL8111` v2.2.2** (sin `LSMinimumSystemVersion`, compatible con macOS 10.6+).
 * El `IOPCIMatch` de la v2.2.2 es `0x816810ec` — coincide exactamente con el hardware.
-* Estado actual: kext presente pero desactivado en `config.plist` hasta confirmar un arranque estable.
+* Prueba fallida: OpenCore registra `OC: Prelinked injection RealtekRTL8111.kext ... - Invalid Parameter`.
+* Estado actual: kext desactivado en `config.plist`. La siguiente prueba es instalarlo dentro de Mavericks y reconstruir cache.
 
-La Positivo BGH A470 tiene Ethernet 10/100. En equipos de esta epoca es comun encontrar Realtek PCIe Fast Ethernet de la familia RTL810x/RTL8105E. Si ese es el chip real, el kext correcto no es `RealtekRTL8111.kext`, sino `RealtekRTL8100.kext`.
-
-El `RealtekRTL8100.kext` agregado declara `IOPCIMatch = 0x813610ec`, por lo que apunta al dispositivo Realtek `10ec:8136`, comun en controladoras PCIe Fast Ethernet RTL810x/RTL8105E. Como no funciono, hay dos posibilidades principales:
-
-* La A470 no usa `10ec:8136` exactamente.
-* El kext carga pero no adjunta al dispositivo por ACPI/PCI, conflicto de driver o inicializacion del chip.
+La Positivo BGH A470 no parece tener una limitacion fisica que impida Ethernet
+por cable. El hardware detectado (`10ec:8168`) coincide con
+`RealtekRTL8111.kext` v2.2.2. El problema actual es el metodo de carga: la
+inyeccion por OpenCore falla antes de que Mavericks cree `en0`.
 
 Accion recomendada:
 
-1. No seguir cambiando kexts de red a ciegas.
-2. Verificar si el kext cargo:
+1. Arrancar Mavericks con el pendrive.
+2. Ejecutar:
    ```bash
-   kextstat | grep -i realtek
-   grep -i RealtekRTL8100 /var/log/system.log
-   ifconfig
+   bash /Volumes/Install*/scripts/red.sh
    ```
-3. Identificar el chip real desde Linux live:
+3. Reiniciar.
+4. Verificar:
    ```bash
-   lspci -nn | grep -i ethernet
-   lspci -nn | grep -i network
+   bash /Volumes/Install*/scripts/ver.sh
    ```
-4. Desde macOS, si aparece en IORegistry:
+5. Si aparece la interfaz pero no recibe IP:
    ```bash
-   ioreg -p IODeviceTree -l | grep -i ethernet
-   ioreg -l | grep -i "vendor-id\|device-id\|IOName"
+   sudo ipconfig set en0 DHCP
    ```
-5. Si el ID no es `10ec:8136`, no insistir con este kext hasta saber el modelo exacto.
-5. Si el ID no es `10ec:8136`, no insistir con este kext hasta saber el modelo exacto.
-6. **RESUELTO**: ID confirmado como `10ec:8168`. Se instaló `RealtekRTL8111` v2.2.2.
-7. Al arrancar con el pendrive actualizado, verificar con:
+   Cambiar `en0` por la interfaz real si aparece como `en1` o `en2`.
+6. Si sigue sin funcionar, generar reporte:
    ```bash
-   kextstat | grep -i realtek
-   ifconfig en0
+   bash /Volumes/Install*/scripts/diag.sh
    ```
-8. Si aparece `en0` y hay IP asignada, el Ethernet está funcionando.
+
+Nota sobre el adaptador USB Ethernet:
+
+Que muestre una MAC indica que al menos una parte del
+adaptador fue detectada. Si no obtiene IP, puede faltar el servicio de red, el
+DHCP puede no estar asignando, o el adaptador puede requerir driver especifico
+para Mavericks. Primero identificar la interfaz con `ifconfig -a` y
+`networksetup -listallhardwareports`.
+
+Estado actual: la red por USB Ethernet funciona y sirve como puente para
+habilitar SSH. El puerto Ethernet interno sigue pendiente. La conexion remota
+quedo documentada en [`SSH-MAVERICKS.md`](SSH-MAVERICKS.md).
+
+Para activar SSH:
+
+```bash
+bash /Volumes/Install*/scripts/ssh.sh
+```
 
 ## Prioridad 3 - Arranque desde disco interno
 
-Mientras el sistema dependa del pendrive, la instalacion no esta completa.
+Estado actual: resuelto. El sistema ya arranca sin pendrive.
 
-Accion recomendada:
+Comando usado:
 
-1. Montar la particion EFI del disco interno.
-2. Copiar la carpeta `EFI` funcional.
-3. Instalar OpenDuet/Legacy boot tambien en el disco interno.
-4. Verificar que la raiz de la particion booteable tenga el archivo `boot`, no solo la carpeta `EFI/`.
+```bash
+sudo bash /Volumes/Install*/scripts/efi-interno.sh 0 SI
+```
+
+El script instala OpenDuet Legacy, monta la particion EFI interna, guarda backup
+de una EFI previa si existe y copia la EFI funcional incluida en `scripts/EFI`.
+El procedimiento completo queda en
+[`ARRANQUE-DISCO-INTERNO.md`](ARRANQUE-DISCO-INTERNO.md).
 
 Recordatorio de layout Legacy:
 
@@ -181,19 +204,17 @@ No reactivar estos kexts en Mavericks salvo que se reemplacen por versiones anti
 
 | Kext | Version | Motivo | Estado |
 | --- | --- | --- | --- |
-| `RealtekRTL8111.kext` | 2.2.2 | Ethernet Realtek RTL8168/RTL8111, chip confirmado `10ec:8168` | Desactivado hasta confirmar arranque estable |
+| `RealtekRTL8111.kext` | 2.2.2 | Ethernet Realtek RTL8168/RTL8111, chip confirmado `10ec:8168` | En EFI, no inyectado por OpenCore; instalar en S/L/E |
 | `RealtekRTL8100.kext` | 2.0.1 | Descartado — chip real no es RTL810x sino RTL8168 | Desactivado |
 
 ## Checklist inmediato
 
-1. Arrancar con teclado/mouse USB.
-2. Reemplazar `VoodooPS2Controller.kext` por version Mavericks.
-3. Confirmar teclado interno.
-4. Confirmar trackpad interno.
-5. Identificar Ethernet con `lspci -nn`.
-6. Instalar kext de red correcto.
-7. Copiar EFI al disco interno e instalar OpenDuet en el disco.
-8. Documentar cada cambio en este archivo y en `README.md`.
+1. Mantener documentado el arranque interno funcional.
+2. Conservar red por USB Ethernet como canal de rescate.
+3. Revisar puerto Ethernet interno `10ec:8168`.
+4. Continuar con audio.
+5. Confirmar aceleracion grafica Intel HD 3000.
+6. Revisar bateria, brillo y energia.
 
 ## Referencias
 

@@ -2,27 +2,87 @@ La guia de deteccion de hardware ahora vive en:
 
   DETECCION-HARDWARE.md
 
-Resumen rapido:
+La guia de SSH remoto vive en:
 
-1. Arrancar Mavericks.
-2. Abrir Terminal.
-3. Verificar que exista:
+  SSH-MAVERICKS.md
 
-   ls /Volumes/EFI/detectar-hardware.sh
+La guia para repetir el arranque interno en HDD/SSD vive en:
 
-4. Si no existe, montar la EFI en la Mac de trabajo y copiar
-   detectar-hardware.sh a la raiz del pendrive.
+  ARRANQUE-DISCO-INTERNO.md
 
-5. Ejecutar:
+Comandos practicos desde Mavericks:
 
-   bash /Volumes/EFI/detectar-hardware.sh
+No hace falta montar la EFI para estos pasos. Usar la particion visible del
+instalador:
 
-6. El script genera:
+  /Volumes/Install OS X Mavericks
+
+Red Ethernet:
+
+1. Activar SSH:
+
+   bash /Volumes/Install*/scripts/ssh.sh
+
+2. Instalar Ethernet:
+
+   bash /Volumes/Install*/scripts/red.sh
+
+3. Reiniciar.
+
+4. Verificar red:
+
+   bash /Volumes/Install*/scripts/ver.sh
+
+5. Si no funciona, generar reporte:
+
+   bash /Volumes/Install*/scripts/diag.sh
+
+Arranque sin pendrive:
+
+Estado actual: resuelto.
+
+1. Instalar EFI en disco interno:
+
+   bash /Volumes/Install*/scripts/efi-interno.sh
+
+2. Elegir el numero del disco interno cuando el script lo pida.
+   Normalmente es 0 si el disco aparece como /dev/disk0.
+
+3. Confirmar escribiendo SI.
+
+Comando directo usado en el disco interno actual:
+
+   sudo bash /Volumes/Install*/scripts/efi-interno.sh 0 SI
+
+SSH:
+
+1. Activar Remote Login:
+
+   sudo systemsetup -setremotelogin on
+
+2. Ver IP:
+
+   ifconfig | grep "inet " | grep -v 127
+
+3. Si SSH directo no funciona, usar la guia:
+
+   SSH-MAVERICKS.md
+
+Deteccion de hardware:
+
+1. Ejecutar:
+
+   bash /Volumes/Install*/scripts/detectar-hardware.sh
+
+2. El script genera:
 
    ~/Desktop/hardware-info.txt
 
-7. Copiarlo al pendrive:
+3. Copiarlo al instalador:
 
-   cp ~/Desktop/hardware-info.txt /Volumes/EFI/
+   cp ~/Desktop/hardware-info.txt /Volumes/Install*/
 
-8. Traerlo de vuelta al repo y reemplazar hardware-info.txt.
+El reporte de diagnostico guarda un archivo red-diagnostico-*.txt en la
+carpeta scripts del instalador si puede escribir ahi. Incluye kexts cargados,
+interfaces ifconfig, servicios de red, deteccion de hardware, IORegistry y
+logs de red.

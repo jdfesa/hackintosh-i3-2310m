@@ -1,7 +1,7 @@
 # Deteccion de hardware
 
 Este documento explica como generar y actualizar `hardware-info.txt` desde
-Mavericks usando [`detectar-hardware.sh`](detectar-hardware.sh).
+Mavericks usando [`scripts/detectar-hardware.sh`](scripts/detectar-hardware.sh).
 
 ## Objetivo
 
@@ -30,19 +30,19 @@ Los datos mas importantes son:
    Finder > Aplicaciones > Utilidades > Terminal
    ```
 
-3. Verificar que el script exista en el pendrive:
+3. Verificar que el script exista en la particion visible del instalador:
 
    ```bash
-   ls /Volumes/EFI/detectar-hardware.sh
+   ls /Volumes/Install*/scripts/detectar-hardware.sh
    ```
 
-   Si no existe, montar la EFI en la Mac de trabajo y copiar
-   `detectar-hardware.sh` a la raiz del pendrive.
+   Si no existe, copiar la carpeta `scripts/` del repo a la particion visible
+   del instalador.
 
 4. Ejecutar el script desde el pendrive:
 
    ```bash
-   bash /Volumes/EFI/detectar-hardware.sh
+   bash /Volumes/Install*/scripts/detectar-hardware.sh
    ```
 
 5. El script genera este archivo en el Escritorio:
@@ -51,16 +51,16 @@ Los datos mas importantes son:
    ~/Desktop/hardware-info.txt
    ```
 
-6. Copiar el resultado al pendrive:
+6. Copiar el resultado al instalador:
 
    ```bash
-   cp ~/Desktop/hardware-info.txt /Volumes/EFI/
+   cp ~/Desktop/hardware-info.txt /Volumes/Install*/
    ```
 
 7. Volver a la Mac de trabajo y copiar ese archivo al repo, reemplazando el
    [`hardware-info.txt`](hardware-info.txt) anterior.
 
-## Que devuelve detectar-hardware.sh
+## Que devuelve scripts/detectar-hardware.sh
 
 El script escribe un reporte unico con estas secciones:
 
