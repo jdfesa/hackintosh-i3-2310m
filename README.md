@@ -103,8 +103,8 @@ se necesita conectar a servicios de Apple, conviene regenerarlos con
 .
 ├── boot                          ← OBLIGATORIO en Legacy. Sin este archivo
 │                                    el BIOS no encuentra OpenCore.
-│                                    Lo instala OpenDuet (BootInstall_X64.tool).
-│                                    No esta en el repo; se genera al instalar.
+│                                    Es un archivo regular que se puede copiar.
+│                                    En disco nuevo hay que correr BootInstall.
 │
 ├── EFI/
 │   ├── BOOT/
@@ -183,19 +183,36 @@ Layout esperado en la particion booteable (pendrive o disco interno):
 
 ```text
 /boot                       ← OBLIGATORIO. Sin este archivo no arranca.
-                               Lo genera: BootInstall_X64.tool de OpenDuet.
-                               No se copia manualmente; se instala con el script.
 /EFI/BOOT/BOOTx64.efi      ← Stage UEFI cargado por /boot.
 /EFI/OC/OpenCore.efi        ← Bootloader principal.
 /EFI/OC/config.plist        ← Configuracion.
 ```
 
-**Atencion**: si se copia la carpeta `EFI/` a un disco nuevo pero no se ejecuta
-`BootInstall_X64.tool` (o `efi-interno.sh`), el archivo `/boot` no existira y
-el equipo **no va a arrancar**. Siempre verificar que `/boot` este presente.
+### Sobre el archivo `/boot`
+
+El archivo `/boot` es un archivo regular que **se puede copiar** como cualquier
+otro. Lo que hace `BootInstall_X64.tool` son **dos cosas**:
+
+1. Copia el archivo `boot` a la raiz de la particion.
+2. Escribe codigo en los **boot sectors** (MBR/PBR) del disco que le dice al
+   BIOS: "busca un archivo llamado `boot` y cargalo".
+
+Por eso:
+
+| Escenario | Que hacer |
+|-----------|-----------|
+| **Actualizar la EFI en un disco que ya arranca** | Copiar `boot` + `EFI/` alcanza. Los boot sectors ya estan. |
+| **Disco o SSD nuevo (recien formateado)** | Hay que correr `BootInstall_X64.tool` o `efi-interno.sh`. Solo copiar `boot` **no alcanza** porque el disco no tiene los boot sectors configurados. |
+
+> **IMPORTANTE**: si tenés un `boot` guardado (por ejemplo en el repo o en un
+> backup), **conservalo**. En una reinstalacion sobre un disco que ya estaba
+> funcionando, copiarlo junto con la carpeta `EFI/` es suficiente y no hace falta
+> volver a correr `BootInstall`. Solo en un disco virgen hay que ejecutar el
+> instalador de OpenDuet.
 
 No confundir `/boot` con `/EFI/BOOT/BOOTx64.efi`: son etapas distintas del
-arranque Legacy.
+arranque Legacy. `/boot` es el primer stage que carga el BIOS; `BOOTx64.efi`
+es el segundo stage que carga OpenCore.
 
 ## Flujo de trabajo recomendado
 
