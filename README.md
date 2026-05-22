@@ -3,7 +3,7 @@
 EFI para instalar y arrancar **macOS Mavericks 10.9.5** en una notebook
 **Positivo BGH A470** con Intel Sandy Bridge y BIOS Legacy.
 
-![sysinfo-mavericks](sysinfo-mavericks.png)
+![sysinfo-mavericks](sysinfo-mavericks.webp)
 
 ## Hardware objetivo
 
